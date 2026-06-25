@@ -1,0 +1,56 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Dockerfile.rank — Offline Candidate Ranker (CPU-only, no network at runtime)
+#
+# Build:
+#   docker build -f Dockerfile.rank -t india-runs-ranker .
+#
+# Run (Linux/macOS):
+#   docker run --rm -v "$(pwd)":/data india-runs-ranker \
+#       --candidates /data/candidates.jsonl --out /data/submission.csv
+#
+# Run (Windows PowerShell):
+#   docker run --rm -v "${PWD}:/data" india-runs-ranker `
+#       --candidates /data/candidates.jsonl --out /data/submission.csv
+#
+# Constraints:
+#   ✓ CPU-only (no CUDA, no GPU drivers needed)
+#   ✓ sentence-transformers model pre-cached at build time (no network at run)
+#   ✓ Target runtime: < 5 minutes for 100,000 candidates on 16 GB RAM
+# ─────────────────────────────────────────────────────────────────────────────
+
+FROM python:3.11-slim
+
+LABEL maintainer="india-runs-hackathon"
+LABEL description="Offline CPU-only candidate ranker for hackathon submission"
+
+# System packages needed for torch + numpy
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Install Python dependencies (network allowed only during build, not at runtime)
+COPY requirements-rank.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements-rank.txt
+
+# Pre-download and cache the sentence-transformer model
+# This ensures zero network calls at ranking time
+RUN python -c "\
+from sentence_transformers import SentenceTransformer; \
+print('Downloading all-MiniLM-L6-v2...'); \
+m = SentenceTransformer('all-MiniLM-L6-v2', device='cpu'); \
+print('Model cached successfully.') \
+"
+
+# Copy application code
+# rank.py is self-contained — no backend package needed at runtime
+COPY rank.py .
+
+# Run as non-root user for security
+RUN useradd -m -u 1000 ranker
+USER ranker
+
+ENTRYPOINT ["python", "/app/rank.py"]
