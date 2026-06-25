@@ -1,0 +1,65 @@
+# ─── Hackathon data files (not committed) ─────────────────────────────────────
+data/candidates.jsonl
+data/candidates.jsonl.gz
+data/test_submission.csv
+data/test_candidates_100.json
+# Organizer-provided bundle files (not re-distributed)
+data/README.docx
+data/candidate_schema.json
+data/job_description.docx
+data/redrob_signals_doc.docx
+data/sample_submission.csv
+data/submission_metadata_template.yaml
+data/submission_spec.docx
+
+# ─── Secrets ──────────────────────────────────────────────────────────────────
+.env
+
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[codz]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+/lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ─── Virtual environment ──────────────────────────────────────────────────────
+venv/
+.venv/
+env/
+
+# ─── Temp / scratch scripts ───────────────────────────────────────────────────
+make_test_100.py
+check_submission.py
+
+# ─── IDE ──────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ─── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Node / Frontend ──────────────────────────────────────────────────────────
+node_modules/
+frontend/.next/
+frontend/dist/
+frontend/build/
