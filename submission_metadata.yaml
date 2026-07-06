@@ -1,0 +1,56 @@
+team_name: "HackFormers"  
+
+primary_contact:
+  name: "Jyoti Sharma"
+  email: "jyotish0428@gmail.com"   
+  phone: "+91-9084590951"        
+
+team_members:
+  - name: "Jyoti Sharma"
+    email: "jyotish0428@gmail.com"
+    role: "AI Engineer"          
+  - name: "Agrim Gupta"
+    email: "agrimgupta8105@gmail.com"
+    role: "Full Stack Developer"
+
+
+github_repo: "https://github.com/agrim08/AI-Candidate-Ranker"
+
+sandbox_link: "https://colab.research.google.com/drive/1UK7vfsiCCCBeEQzoDDPkqzLZnb7jkGb3?usp=sharing"
+
+reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
+
+compute:
+  platform: "Windows 11 PC"                    
+  cpu_cores: 8                                  
+  ram_gb: 16                                    
+  python_version: "3.11"
+  os: "Windows 11"                              
+  uses_gpu_for_inference: false                 
+  has_network_during_ranking: false             
+  pre_computation_required: false               
+  pre_computation_time_minutes: 0               
+
+
+ai_tools_used:
+  - "Claude"        
+  - "Google Antigravity"  
+  
+
+ai_usage_summary: |
+  Used Google Antigravity (Gemini 3.1 pro) and Claude Sonnet 4.6 for code generation, system design, and debugging. Used for building the offline ranking pipeline, designing the penalty constraints (honeypot/consulting), and creating the frontend React components. No candidate data was fed to any LLM during the offline ranking pipeline.
+
+
+methodology_summary: |
+  Two-stage hybrid ranking pipeline prioritizing semantic alignment and deterministic rule-based modifiers. 
+  Stage 1 computes fast deterministic pre-scores (skill matching, years of experience, seniority) for all 100K candidates.
+  Stage 2 performs heavy semantic encoding (using sentence-transformers all-MiniLM-L6-v2) only on the top 3,000 candidates to extract deep JD context matching.
+  Final scores apply multiplicative penalties to filter out honeypot profiles (overlapping dates, expert skills with 0 months), heavily consulting-only backgrounds, and unresponsive candidates. Runtime is ~2.8 minutes for 100K candidates on a standard CPU.
+
+
+declarations:
+  read_submission_spec: true        
+  code_is_original_work: true       
+  no_collusion: true                
+  honeypot_check_done: true        
+  reproduction_tested: true
